@@ -3,10 +3,12 @@ import numpy as np
 import scipy.optimize as sopt
 from scipy.spatial import distance
 
-from nonlinear.steepest_descent.steepest_descent import gradient, f
+from nonlinear.steepest_descent import gradient, f
 
 fig = pt.figure()
-ax = fig.add_subplot(projection='3d')
+ax = fig.add_subplot(
+    projection='3d'
+)
 
 xmesh, ymesh = np.mgrid[0:6:50j, 1:7:50j]
 fmesh = f(np.array([xmesh, ymesh]))
@@ -29,7 +31,9 @@ while True:
     guesses.append(next_guess)
     print('guesses:', guesses)
     print('next guess:', next_guess)
-    diff = distance.euclidean(guesses[-2], guesses[-1])
+    diff = distance.euclidean(
+        guesses[-2], guesses[-1]
+    )
     if diff < tol:
         break
 
