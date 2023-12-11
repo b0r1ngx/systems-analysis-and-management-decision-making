@@ -1,16 +1,18 @@
-from scipy.optimize import minimize, OptimizeResult
+from scipy.optimize import minimize
 
 from nonlinear.constants import start_point
+from nonlinear.unconstraints.plotting import plot
 from nonlinear.save_step import save_step, steps
 from nonlinear.task import f, gradient
 
-truncated_newton = 'Newton-CG'
-result: OptimizeResult = minimize(
+Broyden = 'BFGS'
+result = minimize(
     fun=f,
     x0=start_point,
-    method=truncated_newton,
+    method=Broyden,
     jac=gradient,
     callback=save_step
 )
 print(result)
 print(steps)
+plot(steps)

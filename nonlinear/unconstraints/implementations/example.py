@@ -1,6 +1,6 @@
 import numpy as np
 
-from nonlinear.conjugate_gradient_method import fletcher_reeves
+from nonlinear.unconstraints.implementations.conjugate_gradient_method import fletcher_reeves
 
 
 def rosenbrock(x):

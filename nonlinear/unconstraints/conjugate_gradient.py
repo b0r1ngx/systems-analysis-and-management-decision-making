@@ -1,6 +1,7 @@
 from scipy.optimize import minimize, OptimizeResult
 
 from nonlinear.constants import start_point
+from nonlinear.unconstraints.plotting import plot
 from nonlinear.save_step import save_step, steps
 from nonlinear.task import f, gradient
 
@@ -14,3 +15,4 @@ result: OptimizeResult = minimize(
 )
 print(result)
 print(steps)
+plot(steps)
