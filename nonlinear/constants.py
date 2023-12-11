@@ -1,3 +1,2 @@
-import numpy as np
-
-start_point = np.zeros(2)
+start_point = (0, 0)
+leet = (13, 37)
