@@ -1,3 +1,8 @@
+from math import inf
+
+from scipy.optimize import NonlinearConstraint
+
+
 def first(x):
     x1, x2 = x[0], x[1]
     return 9 * x1 + 4 * x2 - 36  # <= 0
@@ -33,20 +38,24 @@ def seventh(x):
     return 9 * x1 * x1 + 25 * x2 * x2 - 225  # <= 0
 
 
+# more than zero
+inf_bounds = ((0, None), (0, None))
 # to use 1, 2, 3, 4 constraints, use constraints + bounds
 constraints = (
-    {'type': 'ineq', 'fun': first},
-    {'type': 'ineq', 'fun': second},
-    # {'type': 'ineq', 'fun': third},  ||
-    # {'type': 'ineq', 'fun': fourth}, ||
-)  # third & fourth goes to bounds     VV
-bounds = ((0, None), (0, None))
+    NonlinearConstraint(fun=first, lb=-inf, ub=0),
+    NonlinearConstraint(fun=second, lb=-inf, ub=0),
+    # NonlinearConstraint(fun=third, lb=-inf, ub=0),
+    # NonlinearConstraint(fun=fourth, lb=-inf, ub=0),
+)  # third & fourth constraints goes to bounds V
+bounds = ((0, 4), (0, 6))
 
 eq_constraints = (
-    {'type': 'eq', 'fun': fifth}
+    {'type': 'eq', 'fun': fifth},
 )
+eq_bounds = ((4.99, 5.01), (4.99, 5.01))
 
 radial_constraints = (
-    {'type': 'ineq', 'fun': sixth},
-    {'type': 'ineq', 'fun': seventh},
+    NonlinearConstraint(fun=sixth, lb=-inf, ub=0),
+    NonlinearConstraint(fun=seventh, lb=-inf, ub=0),
 )
+radial_bounds = ((-5, 5), (-3, 3))

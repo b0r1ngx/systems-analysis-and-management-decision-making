@@ -2,20 +2,24 @@ from scipy.optimize import minimize
 
 from nonlinear.constants import start_point
 from nonlinear.constraints.constraints import (
-    bounds, constraints, eq_constraints, radial_constraints)
-from nonlinear.unconstraints.plotting import plot
+    bounds, eq_bounds, radial_bounds,
+    constraints, eq_constraints, radial_constraints)
+from nonlinear.unconstraints.plotting import plot, plot_with_constraints
 from nonlinear.save_step import save_step, steps
 from nonlinear.task import f, gradient
 
+constraints = eq_constraints
+bounds = eq_bounds
+# eq_constaints is solved, w/o eq_bounds
 result = minimize(
     fun=f,
     x0=start_point,
     method='SLSQP',
     jac=gradient,
-    bounds=bounds,
+    # bounds=bounds,
     constraints=constraints,
     callback=save_step
 )
 print(result)
 print(steps)
-plot(steps)
+plot_with_constraints(steps, constraints)

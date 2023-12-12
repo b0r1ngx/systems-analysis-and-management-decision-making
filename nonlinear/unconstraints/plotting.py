@@ -1,43 +1,87 @@
 import matplotlib.pyplot as pt
 import numpy as np
+from scipy.optimize import NonlinearConstraint
 
 from nonlinear.task import f
 
 
-def plot(steps, with_3d=False):
+def plot(
+        steps, with_3d=False,
+        merge_solve_n_constraints=False
+):
     fig = pt.figure()
     ax = fig.add_subplot(
         projection='3d'
     )
 
-    xmesh, ymesh = np.mgrid[-1:25:50j, -1:25:50j]
-    fmesh = f(np.array([xmesh, ymesh]))
+    x = np.linspace(-1, 10, 1000)
+    x, y = np.meshgrid(x, x)
+    fmesh = f(np.array([x, y]))
     if with_3d:
-        ax.plot_surface(xmesh, ymesh, fmesh)
+        ax.plot_surface(x, y, fmesh)
         pt.show()
 
     # pt.axis("equal")
-    pt.contour(xmesh, ymesh, fmesh, 50)
+    pt.contour(x, y, fmesh, 50)
     steps = np.array(steps)
     pt.plot(steps.T[0], steps.T[1], "x-")
+    if not merge_solve_n_constraints:
+        pt.show()
+
+
+def plot_with_constraints(
+        steps,
+        constraints: tuple[NonlinearConstraint],
+        with_3d=False,
+        merge_solve_n_constraints=True
+):
+    # plot(steps, with_3d, merge_solve_n_constraints)
+    plot_coord_from, plot_coord_to = -40, 40
+    x = np.linspace(
+        plot_coord_from, plot_coord_to,
+        1000
+    )
+    x, y = np.meshgrid(x, x)
+
+    fig = pt.figure()
+    ax = fig.add_subplot(
+        projection='3d'
+    )
+    fmesh = f(np.array([x, y]))
+    ax.plot_surface(x, y, fmesh)
     pt.show()
 
-
-def plot_with_constraints(steps, constraints, with_3d=False):
-    plot(steps, with_3d)
-    # check this out: https://stackoverflow.com/questions/57017444/how-to-visualize-feasible-region-for-linear-programming-with-arbitrary-inequali
+    to_plot = 1
     for constraint in constraints:
-        constraint
+        to_plot &= constraint.fun((x, y)) <= 0
 
-    d = np.linspace(-2, 16, 300)
-    x, y = np.mgrid[-1:25:50j, -1:25:50j]  # np.meshgrid(d, d)
+    # plot the lines defining the constraints
+    # x1, x2 >= 0
+    y1 = x * 0
+    # x2 <= (36 - 9 * x1) / 4
+    y2 = (36 - 9 * x) / 4.0
+    # x2 <= 6 - x
+    y3 = 6 - x
+
+    # color region of constraints
     pt.imshow(
-        (y >= 2) & (2 * y <= 25 - x) & (4 * y >= 2 * x - 8) & (y <= 2 * x - 5),
-        extent=(x.min(), x.max(), y.min(), y.max()), origin="lower", cmap="Greys", alpha=0.3
+        to_plot,
+        extent=(x.min(), x.max(), y.min(), y.max()),
+        origin="lower",
+        cmap="Greys",
+        alpha=0.3
     )
-    x = np.linspace(0, 16, 2000)
-    # y >= 2
-    # y1 = (x * 0) + 2
-    # pt.plot(x, 2 * np.ones_like(y1))
-    # pt.plot()
+
+    steps = np.array(steps)
+    pt.plot(steps.T[0], steps.T[1], "x-")
+    pt.plot(0, "x-", label='x1 >= 0')
+    pt.plot(x, y1, color='green', label='x2 >= 0')
+    pt.plot(x, y2, label='9*x1 + 4*x2 <= 36')
+    pt.plot(x, y3, label='x1 + x2 <= 6')
+    pt.xlim(-5, plot_coord_to)
+    pt.ylim(-5, plot_coord_to)
+    pt.xlabel('x1')
+    pt.ylabel('x2')
+
+    # pt.legend()
     pt.show()

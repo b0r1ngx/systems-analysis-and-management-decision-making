@@ -1,4 +1,4 @@
-from scipy.optimize import minimize
+from scipy.optimize import differential_evolution
 
 from nonlinear.constants import start_point
 from nonlinear.constraints.constraints import (
@@ -8,14 +8,12 @@ from nonlinear.unconstraints.plotting import plot, plot_with_constraints
 from nonlinear.save_step import save_step, steps
 from nonlinear.task import f, gradient
 
-constraints = eq_constraints
-bounds = eq_bounds
-result = minimize(
-    fun=f,
+constraints = constraints
+bounds = bounds
+result = differential_evolution(
+    func=f,
+    bounds=bounds,
     x0=start_point,
-    method='COBYLA',
-    jac=gradient,
-    # bounds=bounds,
     constraints=constraints,
     callback=save_step
 )
