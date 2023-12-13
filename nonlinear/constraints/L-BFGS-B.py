@@ -7,6 +7,8 @@ from nonlinear.unconstraints.plotting import plot, plot_with_constraints
 from nonlinear.save_step import save_step, steps
 from nonlinear.task import f, gradient
 
+# L-BFGS-B - seems doesn't work with constraints
+# (also not documented that he is, just test)
 constraints = constraints
 bounds = bounds
 result = minimize(
