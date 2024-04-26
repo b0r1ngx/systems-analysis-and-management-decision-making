@@ -93,16 +93,28 @@ def transfer_speech_in_digital_format():
                 else:
                     m[2] = m[1]
 
-    print("System execution time..................", time)
-    print("Packets transferred (total)............", total_packets_counter)
-    print("Packets destroyed......................", packets_destroyed_counter)
-    print("Packets transferred without resources..", packets_counter)
-    print("Packets transferred with resources.....", packets_counter_with_resources)
-    print("Packets destroying frequency...........",
-          packets_destroyed_counter / (packets_counter + packets_counter_with_resources))
-    print("Resource connection frequency..........",
-          packets_counter_with_resources / (packets_counter + packets_counter_with_resources))
+    rcf = packets_counter_with_resources / (packets_counter + packets_counter_with_resources)
+    pdf = packets_destroyed_counter / (packets_counter + packets_counter_with_resources)
+    return time, total_packets_counter, packets_counter, packets_counter_with_resources, rcf, packets_destroyed_counter, pdf
 
 
 if __name__ == "__main__":
-    transfer_speech_in_digital_format()
+    attempts = 5000
+    results_size = 7
+    results = [0] * results_size
+    for attempt in range(attempts):
+        result = transfer_speech_in_digital_format()
+
+        for i in range(results_size):
+            results[i] += result[i]
+
+    for i in range(results_size):
+        results[i] /= attempts
+
+    print("System execution time..................", results[0])
+    print("Packets transferred (total)............", results[1])
+    print("Packets transferred without resources..", results[2])
+    print("Packets transferred with resources.....", results[3])
+    print("Resource connection frequency..........", results[4])
+    print("Packets destroyed......................", results[5])
+    print("Packets destroying frequency...........", results[6])
