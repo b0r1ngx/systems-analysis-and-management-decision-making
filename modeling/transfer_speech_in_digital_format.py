@@ -1,4 +1,4 @@
-import random
+from random import uniform
 
 
 # Task text:
@@ -48,8 +48,7 @@ def transfer_speech_in_digital_format():
             l[2] += 1
             packet_timing_before_goes_to_decoder[l[2]] = m[0]
 
-            r = random.uniform(0, 1)
-            m[0] += 6 + 3 * (2 * r - 1)
+            m[0] += uniform(3, 9)
         else:
             if (packets_counter != 0) or (packets_counter_with_resources != 0):
                 result = (packets_destroyed_counter / (packets_counter + packets_counter_with_resources)) * 100
