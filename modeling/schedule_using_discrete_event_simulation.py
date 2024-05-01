@@ -3,10 +3,10 @@ from enum import Enum
 
 # decision rule / heuristic rule
 class DecisionRule(Enum):
-    short_jobs_first = 1  # - «короткие» работы в первую очередь.
-    long_jobs_first = 2  # - «длинные» работы в первую очередь.
-    minimum_reserve_jobs_first = 3  # работы с минимальным резервом в первую очередь.
-    belonging_to_entry_levels_jobs_first = 4  # работы, принадлежащие начальным уровням в первую очередь.
+    short_jobs_first = 1  # min (t\ij)
+    long_jobs_first = 2  # max (t\ij)
+    minimum_reserve_jobs_first = 3  # min (rez\ij)
+    belonging_to_entry_levels_jobs_first = 4  # min (lev\ij)
 
 
 def schedule(workers: int, decision_rule: DecisionRule):
